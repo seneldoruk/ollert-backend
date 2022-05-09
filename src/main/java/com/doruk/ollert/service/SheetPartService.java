@@ -56,43 +56,50 @@ public class SheetPartService{
         sheetPartRepository.save(part);
     }
 
-    public void newSheetPart(Long table_id){
+    public void newSheetPart(Long sheetid) throws Exception {
         SheetPart sheetPart = new SheetPart();
-        Sheet sheet = sheetRepository.findById(table_id).orElse(null);
+        Sheet sheet = sheetRepository.findById(sheetid)
+                .orElseThrow(()->new Exception("Sheet " + sheetid + "not found"));
         sheetPart.setName("New Column");
         sheetPart.setIndex(sheet.getParts().size());
         sheetPart.setSheet(sheet);
         sheetPartRepository.save(sheetPart);
     }
 
-    public void deleteSheetPart(Long sheetPartID){
-        sheetPartRepository.delete(sheetPartRepository.findById(sheetPartID).orElse(null));
+    public void deleteSheetPart(Long sheetPartID) throws Exception {
+        sheetPartRepository.delete(sheetPartRepository.findById(sheetPartID)
+                .orElseThrow(()-> new Exception("SheetPart " + sheetPartID + "not found")));
 
     }
 
-    public void changeSheetPartName(Long sheetpart_id, String newName) {
-        SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id).orElse(null);
+    public void changeSheetPartName(Long sheetpart_id, String newName) throws Exception {
+        SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id)
+                .orElseThrow(()->new Exception("SheetPart " + sheetpart_id + "not found"));
         sheetPart.setName(newName);
         sheetPartRepository.save(sheetPart);
 
     }
 
-    public void deleteTask(Long sheetpard_id, String task){
-        SheetPart sheetPart = sheetPartRepository.findById(sheetpard_id).orElse(null);
+    public void deleteTask(Long sheetpart_id, String task) throws Exception {
+        SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id)
+                .orElseThrow(()->new Exception("SheetPart " + sheetpart_id + "not found"));
         sheetPart.getTasks().remove(task);
         sheetPartRepository.save(sheetPart);
     }
 
-    public void addTask(Long sheetpart_id, String task) {
-        SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id).orElse(null);
+    public void addTask(Long sheetpart_id, String task) throws Exception {
+        SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id)
+                .orElseThrow(()->new Exception("SheetPart " + sheetpart_id + "not found"));
         sheetPart.getTasks().add(task);
         sheetPartRepository.save(sheetPart);
     }
 
     public Boolean checkAuth(String username, Long sheetpart_id) {
         SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id).orElse(null);
+        if(sheetPart==null){return false;}
         Sheet sheet = sheetPart.getSheet();
         User user = userRepository.findByUsername(username);
+        if(user==null){return false;}
         return sheetRepository.findAllByUsersContaining(user).contains(sheet);
     }
 }

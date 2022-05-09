@@ -30,25 +30,30 @@ public class SheetController {
 
     @GetMapping(value = "/all")
     public @ResponseBody
-    List<SheetViewDTO> getSheetsByUser(){
+    List<SheetViewDTO> getSheetsByUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         return sheetService.findAllByUsername(username);
     }
 
     @GetMapping(value = "/{sheet_id}")
     public @ResponseBody
-    Sheet getSheet(@PathVariable Long sheet_id){
-        return sheetService.findById(sheet_id);
+    Sheet getSheet(@PathVariable Long sheet_id) {
+        try {
+            return sheetService.findById(sheet_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @PutMapping(value = "/{sheet_id}/task", consumes = "application/json")
     public @ResponseBody
-    HttpStatus changePositionOfTask(@PathVariable Long sheet_id, @RequestBody ChangeTaskPositionDTO dto){
+    HttpStatus changePositionOfTask(@PathVariable Long sheet_id, @RequestBody ChangeTaskPositionDTO dto) {
         try {
             sheetPartService.changeTaskPosition(dto, sheet_id);
-            return HttpStatus.ACCEPTED;
-        }catch (Exception e){
-            System.err.println(e);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
 
@@ -56,7 +61,7 @@ public class SheetController {
 
     @PutMapping(value = "/{sheet_id}/part", consumes = "application/json")
     public @ResponseBody
-    HttpStatus changePositionOfSheetPart(@PathVariable Long sheet_id, @RequestBody ChangePartPositionDTO dto){
+    HttpStatus changePositionOfSheetPart(@PathVariable Long sheet_id, @RequestBody ChangePartPositionDTO dto) {
         sheetPartService.changePartPosition(dto, sheet_id);
         return HttpStatus.OK;
 //        try {
@@ -68,25 +73,55 @@ public class SheetController {
 //        }
 
     }
-    @PostMapping(value= "/{sheet_id}")
-    public @ResponseBody HttpStatus createNewSheetPart(@PathVariable Long sheet_id){
-        sheetPartService.newSheetPart(sheet_id);
-        return  HttpStatus.OK;
+
+    @PostMapping(value = "/{sheet_id}")
+    public @ResponseBody
+    HttpStatus createNewSheetPart(@PathVariable Long sheet_id) {
+        try {
+            sheetPartService.newSheetPart(sheet_id);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 
-    @PutMapping(value= "/{sheet_id}")
-    public @ResponseBody HttpStatus changeSheetName(@PathVariable Long sheet_id, @RequestParam String name){
-        sheetService.changeSheetName(sheet_id, name);
-        return HttpStatus.OK;
+    @PutMapping(value = "/{sheet_id}")
+    public @ResponseBody
+    HttpStatus changeSheetName(@PathVariable Long sheet_id, @RequestParam String name) {
+        try {
+            sheetService.changeSheetName(sheet_id, name);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
+        }
     }
-    @DeleteMapping(value= "/{sheet_id}")
-    public @ResponseBody HttpStatus deleteSheet(@PathVariable Long sheet_id){
-        sheetService.deleteById(sheet_id);
-        return HttpStatus.OK;
+
+    @DeleteMapping(value = "/{sheet_id}")
+    public @ResponseBody
+    HttpStatus deleteSheet(@PathVariable Long sheet_id) {
+        try {
+            sheetService.deleteById(sheet_id);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
+        }
     }
+
+
     @PostMapping(value = "/all")
-    public @ResponseBody HttpStatus newSheet(@RequestParam String name){
-        sheetService.newSheet(name);
-        return HttpStatus.OK;
+    public @ResponseBody
+    HttpStatus newSheet(@RequestParam String name) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        try {
+            sheetService.newSheet(name, username);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
+        }
+
     }
 }

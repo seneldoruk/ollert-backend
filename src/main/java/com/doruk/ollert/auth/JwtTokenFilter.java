@@ -1,7 +1,5 @@
 package com.doruk.ollert.auth;
 
-import com.doruk.ollert.service.SheetPartService;
-import com.doruk.ollert.service.SheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             try {
                 username = tokenManager.getUsername(token);
             } catch (Exception e) {
-                System.err.println(e);
+               e.printStackTrace();
             }
         }
 
