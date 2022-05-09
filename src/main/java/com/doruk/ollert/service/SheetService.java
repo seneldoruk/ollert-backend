@@ -19,8 +19,8 @@ public class SheetService {
     @Autowired
     UserRepository userRepository;
 
-    public List<SheetViewDTO> findAllByUserID(Long id){
-        User user = userRepository.findById(id).orElse(null);
+    public List<SheetViewDTO> findAllByUsername(String username){
+        User user = userRepository.findByUsername(username);
         List<Sheet> sheets = sheetRepository.findAllByUsersContaining(user);
         List<SheetViewDTO> sheetViewDTO = new ArrayList<>();
         for(Sheet s: sheets){
@@ -31,16 +31,8 @@ public class SheetService {
         }
         return sheetViewDTO;
     }
-    public List<SheetViewDTO> findAll(){
-        List<Sheet> sheets = (List<Sheet>) sheetRepository.findAll();
-        List<SheetViewDTO> sheetViewDTO = new ArrayList<>();
-        for(Sheet s: sheets){
-            SheetViewDTO dto = new SheetViewDTO();
-            dto.name = s.getName();
-            dto.id = s.getId();
-            sheetViewDTO.add(dto);
-        }
-        return sheetViewDTO;
+    public List<Sheet> findAll(){
+        return  (List<Sheet>) sheetRepository.findAll();
     }
 
     public Sheet findById(Long table_id) {

@@ -12,7 +12,7 @@ import java.util.Date;
 @Service
 public class TokenManager {
     private static final int validity = 5*60*1000;
-    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(String username){
         return Jwts.builder()

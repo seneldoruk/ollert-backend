@@ -6,7 +6,6 @@ import com.doruk.ollert.dto.SheetViewDTO;
 import com.doruk.ollert.entity.Sheet;
 import com.doruk.ollert.service.SheetPartService;
 import com.doruk.ollert.service.SheetService;
-import com.doruk.ollert.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,34 +16,32 @@ import java.util.List;
 
 @Controller
 @CrossOrigin
+@RequestMapping("sheet")
 public class SheetController {
 
-    UserService userService;
     SheetService sheetService;
     SheetPartService sheetPartService;
 
     @Autowired
-    public SheetController(UserService userService, SheetService sheetService, SheetPartService sheetPartService) {
-        this.userService = userService;
+    public SheetController(SheetService sheetService, SheetPartService sheetPartService) {
         this.sheetService = sheetService;
         this.sheetPartService = sheetPartService;
     }
 
-    @GetMapping(value = "/sheet/all")
+    @GetMapping(value = "/all")
     public @ResponseBody
     List<SheetViewDTO> getSheetsByUser(){
-
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return sheetService.findAll();
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return sheetService.findAllByUsername(username);
     }
 
-    @GetMapping(value = "/sheet/{sheet_id}")
+    @GetMapping(value = "/{sheet_id}")
     public @ResponseBody
     Sheet getSheet(@PathVariable Long sheet_id){
         return sheetService.findById(sheet_id);
     }
 
-    @PutMapping(value = "/sheet/{sheet_id}/task", consumes = "application/json")
+    @PutMapping(value = "/{sheet_id}/task", consumes = "application/json")
     public @ResponseBody
     HttpStatus changePositionOfTask(@PathVariable Long sheet_id, @RequestBody ChangeTaskPositionDTO dto){
         try {
@@ -57,11 +54,11 @@ public class SheetController {
 
     }
 
-    @PutMapping(value = "/sheet/{sheet_id}/part", consumes = "application/json")
+    @PutMapping(value = "/{sheet_id}/part", consumes = "application/json")
     public @ResponseBody
     HttpStatus changePositionOfSheetPart(@PathVariable Long sheet_id, @RequestBody ChangePartPositionDTO dto){
         sheetPartService.changePartPosition(dto, sheet_id);
-        return HttpStatus.ACCEPTED;
+        return HttpStatus.OK;
 //        try {
 //
 //        }catch (Exception e){
@@ -71,23 +68,23 @@ public class SheetController {
 //        }
 
     }
-    @PostMapping(value= "/sheet/{sheet_id}")
+    @PostMapping(value= "/{sheet_id}")
     public @ResponseBody HttpStatus createNewSheetPart(@PathVariable Long sheet_id){
         sheetPartService.newSheetPart(sheet_id);
         return  HttpStatus.OK;
     }
 
-    @PutMapping(value= "/sheet/{sheet_id}")
+    @PutMapping(value= "/{sheet_id}")
     public @ResponseBody HttpStatus changeSheetName(@PathVariable Long sheet_id, @RequestParam String name){
         sheetService.changeSheetName(sheet_id, name);
         return HttpStatus.OK;
     }
-    @DeleteMapping(value= "/sheet/{sheet_id}")
+    @DeleteMapping(value= "/{sheet_id}")
     public @ResponseBody HttpStatus deleteSheet(@PathVariable Long sheet_id){
         sheetService.deleteById(sheet_id);
         return HttpStatus.OK;
     }
-    @PostMapping(value = "/sheet/all")
+    @PostMapping(value = "/all")
     public @ResponseBody HttpStatus newSheet(@RequestParam String name){
         sheetService.newSheet(name);
         return HttpStatus.OK;
