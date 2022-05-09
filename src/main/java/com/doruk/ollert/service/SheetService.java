@@ -59,11 +59,17 @@ public class SheetService {
         sheetRepository.delete(sheet);
     }
 
-    public void newTable(String name) {
+    public void newSheet(String name) {
         User user = userRepository.findById(1L).orElse(null);
         Sheet sheet = new Sheet();
         sheet.setName(name);
         sheet.getUsers().add(user);
         sheetRepository.save(sheet);
+    }
+
+    public Boolean checkAuth(String username, Long sheet_id) {
+        Sheet sheet = sheetRepository.findById(sheet_id).orElse(null);
+        User user = userRepository.findByUsername(username);
+        return sheetRepository.findAllByUsersContaining(user).contains(sheet);
     }
 }

@@ -9,6 +9,7 @@ import com.doruk.ollert.repository.UserRepository;
 import com.doruk.ollert.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,8 +23,13 @@ public class DataGenerator {
         return args -> {
             User user = new User();
             user.setUsername("doruk");
-            user.setPassword("12345");
+            user.setPassword(new BCryptPasswordEncoder().encode("12345"));
             userService.saveUser(user);
+
+            User user1 = new User();
+            user1.setUsername("abc");
+            user1.setPassword(new BCryptPasswordEncoder().encode("12345"));
+            userService.saveUser(user1);
 
             Sheet table = new Sheet();
             table.getUsers().add(user);
@@ -45,7 +51,7 @@ public class DataGenerator {
             sheetPartRepository.save(column1);
 
 
-            column = sheetPartRepository.findById(3L).orElse(null);
+            column = sheetPartRepository.findById(4L).orElse(null);
             column.getTasks().set(1, "dont finish it");
             sheetPartRepository.save(column);
 

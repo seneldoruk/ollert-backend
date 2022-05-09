@@ -4,8 +4,10 @@ import com.doruk.ollert.dto.ChangePartPositionDTO;
 import com.doruk.ollert.dto.ChangeTaskPositionDTO;
 import com.doruk.ollert.entity.Sheet;
 import com.doruk.ollert.entity.SheetPart;
+import com.doruk.ollert.entity.User;
 import com.doruk.ollert.repository.SheetPartRepository;
 import com.doruk.ollert.repository.SheetRepository;
+import com.doruk.ollert.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class SheetPartService{
 
     @Autowired
     SheetRepository sheetRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     public void changeTaskPosition(ChangeTaskPositionDTO dto, Long id){
@@ -82,5 +87,12 @@ public class SheetPartService{
         SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id).orElse(null);
         sheetPart.getTasks().add(task);
         sheetPartRepository.save(sheetPart);
+    }
+
+    public Boolean checkAuth(String username, Long sheetpart_id) {
+        SheetPart sheetPart = sheetPartRepository.findById(sheetpart_id).orElse(null);
+        Sheet sheet = sheetPart.getSheet();
+        User user = userRepository.findByUsername(username);
+        return sheetRepository.findAllByUsersContaining(user).contains(sheet);
     }
 }
