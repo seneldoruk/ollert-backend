@@ -28,8 +28,16 @@ public class UserSheetAccessFilter extends OncePerRequestFilter {
             filterChain.doFilter(req, res);
         }
 
+
         Boolean canAccess = true;
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        String username;
+        try {
+            username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        }catch (Exception e){
+            res.setStatus(401);
+            return;
+        }
+
         String[] uri = req.getRequestURI().split("/");
         String requested_path = uri[1];
         Long requested_id;

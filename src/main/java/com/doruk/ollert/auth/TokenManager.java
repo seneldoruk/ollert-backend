@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Service
 public class TokenManager {
-    private static final int validity = 5*60*1000;
+    private static final int validity = 30*60*1000;
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(String username){
