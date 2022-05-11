@@ -27,6 +27,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
+        if (req.getRequestURI().contains("auth")) {
+            filterChain.doFilter(req, res);
+            return;
+        }
+
         if (auth != null && auth.contains("Bearer")) {
             token = auth.split(" ")[1];
             try {

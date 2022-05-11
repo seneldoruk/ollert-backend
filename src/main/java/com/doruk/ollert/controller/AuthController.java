@@ -3,6 +3,7 @@ package com.doruk.ollert.controller;
 import com.doruk.ollert.auth.TokenManager;
 import com.doruk.ollert.dto.AuthDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,8 +31,7 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.getUsername(), auth.getPassword()));
             return ResponseEntity.ok(tokenManager.generateToken(auth.getUsername()));
         } catch (AuthenticationException e) {
-            System.err.println(e.getMessage());
-            return (ResponseEntity<String>) ResponseEntity.badRequest();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
