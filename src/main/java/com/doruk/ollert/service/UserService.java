@@ -1,5 +1,6 @@
 package com.doruk.ollert.service;
 
+import com.doruk.ollert.dto.AuthDTO;
 import com.doruk.ollert.entity.User;
 import com.doruk.ollert.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,21 @@ public class UserService {
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    public void saveUser(AuthDTO authDTO) throws IllegalArgumentException{
+        String username = authDTO.getUsername();
+        String password = authDTO.getPassword();
+
+        if(getByUsername(username)!=null){
+            throw new IllegalArgumentException(username +  "is already registered");
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        saveUser(user);
+
     }
 
     public User getByUsername(String username) {
