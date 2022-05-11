@@ -27,7 +27,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        if (req.getRequestURI().contains("auth")) {
+        if (req.getRequestURI().contains("auth") || req.getRequestURI().contains("h2-console")) {
             filterChain.doFilter(req, res);
             return;
         }

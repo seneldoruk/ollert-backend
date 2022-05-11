@@ -26,24 +26,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     final UserSheetAccessFilter userSheetAccessFilter;
 
-    public WebSecurityConfiguration(JwtTokenFilter jwtTokenFilter, UserDetailsService userDetailsService, UserSheetAccessFilter userSheetAccessFilter) {
+    BCryptPasswordEncoder passwordEncoder;
+
+    public WebSecurityConfiguration(JwtTokenFilter jwtTokenFilter, UserDetailsService userDetailsService, UserSheetAccessFilter userSheetAccessFilter, BCryptPasswordEncoder passwordEncoder) {
         this.jwtTokenFilter = jwtTokenFilter;
         this.userDetailsService = userDetailsService;
         this.userSheetAccessFilter = userSheetAccessFilter;
+        this.passwordEncoder = passwordEncoder;
     }
 
-
-    @Bean
-    public BCryptPasswordEncoder getBCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
 
     @Autowired
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+                .passwordEncoder(passwordEncoder);
     }
 
     @Bean

@@ -8,4 +8,3 @@ This is the Spring Boot backend for Ollert, a project to clone the functionality
 * Migrate database to postgres
 * JWT refresh token
 * Login/Register
-* Encryptor as bean

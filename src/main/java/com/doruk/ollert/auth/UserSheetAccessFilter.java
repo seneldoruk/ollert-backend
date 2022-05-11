@@ -24,7 +24,7 @@ public class UserSheetAccessFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        if (req.getRequestURI().contains("auth")) {
+        if (req.getRequestURI().contains("auth") || req.getRequestURI().contains("h2-console")) {
             filterChain.doFilter(req, res);
             return;
         }
