@@ -2,16 +2,19 @@ package com.doruk.ollert.controller;
 
 import com.doruk.ollert.dto.ChangePartPositionDTO;
 import com.doruk.ollert.dto.ChangeTaskPositionDTO;
+import com.doruk.ollert.dto.SheetAccessDTO;
 import com.doruk.ollert.dto.SheetViewDTO;
 import com.doruk.ollert.entity.Sheet;
 import com.doruk.ollert.service.SheetPartService;
 import com.doruk.ollert.service.SheetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -37,11 +40,12 @@ public class SheetController {
 
     @GetMapping(value = "/{sheet_id}")
     public @ResponseBody
-    Sheet getSheet(@PathVariable Long sheet_id) {
+    Sheet getSheet(@PathVariable Long sheet_id, HttpServletResponse res) {
         try {
             return sheetService.findById(sheet_id);
         } catch (Exception e) {
             e.printStackTrace();
+            res.setStatus(400);
             return null;
         }
     }
@@ -123,5 +127,36 @@ public class SheetController {
             return HttpStatus.BAD_REQUEST;
         }
 
+    }
+
+    @GetMapping(value = "/{sheet_id}/users")
+    public @ResponseBody
+    SheetAccessDTO sheetAccessUsers(@PathVariable Long sheet_id, HttpServletResponse res){
+        try {
+            return sheetService.sheetAccess(sheet_id);
+        }catch (Exception e){
+            res.setStatus(400);
+            return null;
+        }
+    }
+
+    @PutMapping(value = "/{sheet_id}/users")
+    public @ResponseBody HttpStatus sheetAccessAdd(@PathVariable Long sheet_id, @RequestParam String username) {
+        try {
+            sheetService.sheetAccessAdd(sheet_id, username);
+            return HttpStatus.OK;
+        }catch (Exception e){
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
+    @DeleteMapping(value = "/{sheet_id}/users")
+    public @ResponseBody HttpStatus sheetAccessRemove(@PathVariable Long sheet_id, @RequestParam String username) {
+        try {
+            sheetService.sheetAccessRemove(sheet_id, username);
+            return HttpStatus.OK;
+        }catch (Exception e){
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 }

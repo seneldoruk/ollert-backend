@@ -1,5 +1,6 @@
 package com.doruk.ollert.service;
 
+import com.doruk.ollert.dto.SheetAccessDTO;
 import com.doruk.ollert.dto.SheetViewDTO;
 import com.doruk.ollert.entity.Sheet;
 import com.doruk.ollert.entity.User;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SheetService {
@@ -74,4 +76,40 @@ public class SheetService {
         return sheetRepository.findAllByUsersContaining(user).contains(sheet);
     }
 
+    public SheetAccessDTO sheetAccess(Long id) throws  Exception{
+        Sheet sheet = sheetRepository.findById(id)
+                .orElseThrow(()->new Exception("Sheet " + id + "not found"));
+        List<User> allusers = (List<User>) userRepository.findAll();
+        List<User> permittedUsers = userRepository.findAllBySheetsContaining(sheet);
+        allusers = allusers.stream().filter(user -> {return !permittedUsers.contains(user);})
+                .collect(Collectors.toList());
+        SheetAccessDTO dto = new SheetAccessDTO();
+        dto.permitted = permittedUsers.stream().map(User::getUsername).collect(Collectors.toList());
+        dto.notPermitted = allusers.stream().map(User::getUsername).collect(Collectors.toList());
+        return dto;
+    }
+
+    public void sheetAccessAdd(Long sheet_id, String username) throws Exception{
+        Sheet sheet = sheetRepository.findById(sheet_id)
+                .orElseThrow(()->new Exception("Sheet " + sheet_id+ "not found"));
+        User user = userRepository.findByUsername(username);
+        if(user == null){throw new Exception("User " + username + "not found");}
+        sheet.getUsers().add(user);
+        sheetRepository.save(sheet);
+    }
+
+    public void sheetAccessRemove(Long sheet_id, String username) throws Exception{
+        Sheet sheet = sheetRepository.findById(sheet_id)
+                .orElseThrow(()->new Exception("Sheet " + sheet_id+ "not found"));
+        User user = userRepository.findByUsername(username);
+        try {
+            sheet.getUsers().remove(user);
+            sheetRepository.save(sheet);
+        }catch (Exception e){
+            throw new Exception("User " + username + "not found in sheet" + sheet_id);
+        }
+
+
+
+    }
 }
