@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("auth")
 public class AuthController {
     final TokenManager tokenManager;
-    final  AuthenticationManager authenticationManager;
+    final AuthenticationManager authenticationManager;
     final UserService userService;
 
     public AuthController(TokenManager tokenManager, AuthenticationManager authenticationManager, UserService userService) {
@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<String> login(@RequestBody AuthDTO auth){
+    public ResponseEntity<String> login(@RequestBody AuthDTO auth) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.getUsername(), auth.getPassword()));
             return ResponseEntity.ok(tokenManager.generateToken(auth.getUsername()));
@@ -39,11 +39,11 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<String> register(@RequestBody AuthDTO auth){
+    public ResponseEntity<String> register(@RequestBody AuthDTO auth) {
         try {
             userService.saveUser(auth);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -2,7 +2,6 @@ package com.doruk.ollert.auth;
 
 import com.doruk.ollert.service.SheetPartService;
 import com.doruk.ollert.service.SheetService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,11 +15,13 @@ import java.io.IOException;
 @Component
 public class UserSheetAccessFilter extends OncePerRequestFilter {
 
-    @Autowired
     SheetService sheetService;
-
-    @Autowired
     SheetPartService sheetPartService;
+
+    public UserSheetAccessFilter(SheetService sheetService, SheetPartService sheetPartService) {
+        this.sheetService = sheetService;
+        this.sheetPartService = sheetPartService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
@@ -34,7 +35,7 @@ public class UserSheetAccessFilter extends OncePerRequestFilter {
         String username;
         try {
             username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             res.setStatus(401);
             return;
         }

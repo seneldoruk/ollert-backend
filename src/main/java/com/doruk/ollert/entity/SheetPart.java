@@ -2,8 +2,6 @@ package com.doruk.ollert.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
-import org.hibernate.annotations.Fetch;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,7 +20,7 @@ public class SheetPart {
     int index;
 
     @ManyToOne
-    @JoinColumn(name="sheet_id")
+    @JoinColumn(name = "sheet_id")
     @JsonBackReference
     Sheet sheet;
 

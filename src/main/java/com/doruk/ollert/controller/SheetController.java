@@ -8,7 +8,6 @@ import com.doruk.ollert.entity.Sheet;
 import com.doruk.ollert.service.SheetPartService;
 import com.doruk.ollert.service.SheetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -131,31 +130,33 @@ public class SheetController {
 
     @GetMapping(value = "/{sheet_id}/users")
     public @ResponseBody
-    SheetAccessDTO sheetAccessUsers(@PathVariable Long sheet_id, HttpServletResponse res){
+    SheetAccessDTO sheetAccessUsers(@PathVariable Long sheet_id, HttpServletResponse res) {
         try {
             return sheetService.sheetAccess(sheet_id);
-        }catch (Exception e){
+        } catch (Exception e) {
             res.setStatus(400);
             return null;
         }
     }
 
     @PutMapping(value = "/{sheet_id}/users")
-    public @ResponseBody HttpStatus sheetAccessAdd(@PathVariable Long sheet_id, @RequestParam String username) {
+    public @ResponseBody
+    HttpStatus sheetAccessAdd(@PathVariable Long sheet_id, @RequestParam String username) {
         try {
             sheetService.sheetAccessAdd(sheet_id, username);
             return HttpStatus.OK;
-        }catch (Exception e){
+        } catch (Exception e) {
             return HttpStatus.BAD_REQUEST;
         }
     }
 
     @DeleteMapping(value = "/{sheet_id}/users")
-    public @ResponseBody HttpStatus sheetAccessRemove(@PathVariable Long sheet_id, @RequestParam String username) {
+    public @ResponseBody
+    HttpStatus sheetAccessRemove(@PathVariable Long sheet_id, @RequestParam String username) {
         try {
             sheetService.sheetAccessRemove(sheet_id, username);
             return HttpStatus.OK;
-        }catch (Exception e){
+        } catch (Exception e) {
             return HttpStatus.BAD_REQUEST;
         }
     }

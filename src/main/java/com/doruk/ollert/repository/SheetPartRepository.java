@@ -10,6 +10,8 @@ import java.util.List;
 @Transactional
 public interface SheetPartRepository extends CrudRepository<SheetPart, Long> {
     SheetPart findByIdAndSheet(Long id, Sheet sheet);
+
     List<SheetPart> findAllBySheet(Sheet sheet);
+
     SheetPart findByIndexAndSheet(int index, Sheet sheet);
 }

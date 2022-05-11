@@ -36,7 +36,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Autowired
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {

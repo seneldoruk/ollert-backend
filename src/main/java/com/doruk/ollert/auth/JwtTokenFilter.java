@@ -1,6 +1,5 @@
 package com.doruk.ollert.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -17,9 +16,11 @@ import java.util.ArrayList;
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
     TokenManager tokenManager;
 
+    public JwtTokenFilter(TokenManager tokenManager) {
+        this.tokenManager = tokenManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
@@ -37,7 +38,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             try {
                 username = tokenManager.getUsername(token);
             } catch (Exception e) {
-               e.printStackTrace();
+                e.printStackTrace();
             }
         }
 

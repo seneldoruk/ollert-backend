@@ -6,7 +6,6 @@ import com.doruk.ollert.entity.Sheet;
 import com.doruk.ollert.entity.User;
 import com.doruk.ollert.repository.SheetRepository;
 import com.doruk.ollert.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,17 +14,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class SheetService {
-    @Autowired
     SheetRepository sheetRepository;
-
-    @Autowired
     UserRepository userRepository;
 
-    public List<SheetViewDTO> findAllByUsername(String username){
+    public SheetService(SheetRepository sheetRepository, UserRepository userRepository) {
+        this.sheetRepository = sheetRepository;
+        this.userRepository = userRepository;
+    }
+
+    public List<SheetViewDTO> findAllByUsername(String username) {
         User user = userRepository.findByUsername(username);
         List<Sheet> sheets = sheetRepository.findAllByUsersContaining(user);
         List<SheetViewDTO> sheetViewDTO = new ArrayList<>();
-        for(Sheet s: sheets){
+        for (Sheet s : sheets) {
             SheetViewDTO dto = new SheetViewDTO();
             dto.name = s.getName();
             dto.id = s.getId();
@@ -33,18 +34,19 @@ public class SheetService {
         }
         return sheetViewDTO;
     }
-    public List<Sheet> findAll(){
-        return  (List<Sheet>) sheetRepository.findAll();
+
+    public List<Sheet> findAll() {
+        return (List<Sheet>) sheetRepository.findAll();
     }
 
     public Sheet findById(Long sheet_id) throws Exception {
         return sheetRepository.findById(sheet_id)
-                .orElseThrow(()->new Exception("Sheet " + sheet_id + "not found"));
+                .orElseThrow(() -> new Exception("Sheet " + sheet_id + "not found"));
     }
 
     public void changeSheetName(Long sheet_id, String name) throws Exception {
         Sheet sheet = sheetRepository.findById(sheet_id)
-                .orElseThrow(()->new Exception("Sheet " + sheet_id + "not found"));
+                .orElseThrow(() -> new Exception("Sheet " + sheet_id + "not found"));
         sheet.setName(name);
         sheetRepository.save(sheet);
 
@@ -52,13 +54,13 @@ public class SheetService {
 
     public void deleteById(Long sheet_id) throws Exception {
         Sheet sheet = sheetRepository.findById(sheet_id)
-                .orElseThrow(()->new Exception("Sheet " + sheet_id + "not found"));
+                .orElseThrow(() -> new Exception("Sheet " + sheet_id + "not found"));
         sheetRepository.delete(sheet);
     }
 
     public void newSheet(String name, String username) throws Exception {
         User user = userRepository.findByUsername(username);
-        if(user == null){
+        if (user == null) {
             throw new Exception("User " + username + "not found");
         }
 
@@ -71,17 +73,21 @@ public class SheetService {
     public Boolean checkAuth(String username, Long sheet_id) {
         Sheet sheet = sheetRepository.findById(sheet_id).orElse(null);
         User user = userRepository.findByUsername(username);
-        if(user == null || sheet == null){return false;}
+        if (user == null || sheet == null) {
+            return false;
+        }
 
         return sheetRepository.findAllByUsersContaining(user).contains(sheet);
     }
 
-    public SheetAccessDTO sheetAccess(Long id) throws  Exception{
+    public SheetAccessDTO sheetAccess(Long id) throws Exception {
         Sheet sheet = sheetRepository.findById(id)
-                .orElseThrow(()->new Exception("Sheet " + id + "not found"));
+                .orElseThrow(() -> new Exception("Sheet " + id + "not found"));
         List<User> allusers = (List<User>) userRepository.findAll();
         List<User> permittedUsers = userRepository.findAllBySheetsContaining(sheet);
-        allusers = allusers.stream().filter(user -> {return !permittedUsers.contains(user);})
+        allusers = allusers.stream().filter(user -> {
+                    return !permittedUsers.contains(user);
+                })
                 .collect(Collectors.toList());
         SheetAccessDTO dto = new SheetAccessDTO();
         dto.permitted = permittedUsers.stream().map(User::getUsername).collect(Collectors.toList());
@@ -89,26 +95,27 @@ public class SheetService {
         return dto;
     }
 
-    public void sheetAccessAdd(Long sheet_id, String username) throws Exception{
+    public void sheetAccessAdd(Long sheet_id, String username) throws Exception {
         Sheet sheet = sheetRepository.findById(sheet_id)
-                .orElseThrow(()->new Exception("Sheet " + sheet_id+ "not found"));
+                .orElseThrow(() -> new Exception("Sheet " + sheet_id + "not found"));
         User user = userRepository.findByUsername(username);
-        if(user == null){throw new Exception("User " + username + "not found");}
+        if (user == null) {
+            throw new Exception("User " + username + "not found");
+        }
         sheet.getUsers().add(user);
         sheetRepository.save(sheet);
     }
 
-    public void sheetAccessRemove(Long sheet_id, String username) throws Exception{
+    public void sheetAccessRemove(Long sheet_id, String username) throws Exception {
         Sheet sheet = sheetRepository.findById(sheet_id)
-                .orElseThrow(()->new Exception("Sheet " + sheet_id+ "not found"));
+                .orElseThrow(() -> new Exception("Sheet " + sheet_id + "not found"));
         User user = userRepository.findByUsername(username);
         try {
             sheet.getUsers().remove(user);
             sheetRepository.save(sheet);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("User " + username + "not found in sheet" + sheet_id);
         }
-
 
 
     }
