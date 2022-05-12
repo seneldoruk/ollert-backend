@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    TokenManager tokenManager;
+    final TokenManager tokenManager;
 
     public JwtTokenFilter(TokenManager tokenManager) {
         this.tokenManager = tokenManager;

@@ -15,8 +15,8 @@ import java.io.IOException;
 @Component
 public class UserSheetAccessFilter extends OncePerRequestFilter {
 
-    SheetService sheetService;
-    SheetPartService sheetPartService;
+    final SheetService sheetService;
+    final SheetPartService sheetPartService;
 
     public UserSheetAccessFilter(SheetService sheetService, SheetPartService sheetPartService) {
         this.sheetService = sheetService;

@@ -21,8 +21,8 @@ import java.util.List;
 @RequestMapping("sheet")
 public class SheetController {
 
-    SheetService sheetService;
-    SheetPartService sheetPartService;
+    final SheetService sheetService;
+    final SheetPartService sheetPartService;
 
     @Autowired
     public SheetController(SheetService sheetService, SheetPartService sheetPartService) {

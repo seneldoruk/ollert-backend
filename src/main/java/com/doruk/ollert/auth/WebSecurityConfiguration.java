@@ -26,7 +26,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     final UserSheetAccessFilter userSheetAccessFilter;
 
-    BCryptPasswordEncoder passwordEncoder;
+    final BCryptPasswordEncoder passwordEncoder;
 
     public WebSecurityConfiguration(JwtTokenFilter jwtTokenFilter, UserDetailsService userDetailsService, UserSheetAccessFilter userSheetAccessFilter, BCryptPasswordEncoder passwordEncoder) {
         this.jwtTokenFilter = jwtTokenFilter;

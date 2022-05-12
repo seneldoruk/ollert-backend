@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("sheetparts")
 public class SheetPartController {
-    SheetPartService sheetPartService;
+    final SheetPartService sheetPartService;
 
     public SheetPartController(SheetPartService sheetPartService) {
         this.sheetPartService = sheetPartService;

@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class SheetPartService {
 
-    SheetPartRepository sheetPartRepository;
-    SheetRepository sheetRepository;
-    UserRepository userRepository;
+    final SheetPartRepository sheetPartRepository;
+    final SheetRepository sheetRepository;
+    final UserRepository userRepository;
 
     public SheetPartService(SheetPartRepository sheetPartRepository, SheetRepository sheetRepository, UserRepository userRepository) {
         this.sheetPartRepository = sheetPartRepository;

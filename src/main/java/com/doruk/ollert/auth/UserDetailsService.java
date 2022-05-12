@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
-    UserService userService;
+    final UserService userService;
 
     public UserDetailsService(UserService userService) {
         this.userService = userService;

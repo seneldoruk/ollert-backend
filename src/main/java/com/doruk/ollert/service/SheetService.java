@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class SheetService {
-    SheetRepository sheetRepository;
-    UserRepository userRepository;
+    final SheetRepository sheetRepository;
+    final UserRepository userRepository;
 
     public SheetService(SheetRepository sheetRepository, UserRepository userRepository) {
         this.sheetRepository = sheetRepository;

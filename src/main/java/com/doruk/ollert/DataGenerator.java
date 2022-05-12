@@ -51,6 +51,7 @@ public class DataGenerator {
 
 
             column = sheetPartRepository.findById(4L).orElse(null);
+            assert column != null;
             column.getTasks().set(1, "dont finish it");
             sheetPartRepository.save(column);
 
