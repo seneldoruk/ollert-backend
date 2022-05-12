@@ -51,8 +51,6 @@ public class UserSheetAccessFilter extends OncePerRequestFilter {
             } else {
                 requested_id = Long.parseLong(uri[2]);
             }
-            System.out.println(requested_id);
-            System.out.println(requested_path);
             if (requested_path.equals("sheet")) {
                 canAccess = sheetService.checkAuth(username, requested_id);
             } else if (requested_path.equals("sheetpart")) {
