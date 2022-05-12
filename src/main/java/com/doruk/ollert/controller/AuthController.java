@@ -34,6 +34,7 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.getUsername(), auth.getPassword()));
             return ResponseEntity.ok(tokenManager.generateToken(auth.getUsername()));
         } catch (AuthenticationException e) {
+            System.err.println("login: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -44,7 +45,7 @@ public class AuthController {
             userService.saveUser(auth);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            System.err.println("register: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

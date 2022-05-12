@@ -23,7 +23,7 @@ public class SheetPartController {
             sheetPartService.deleteSheetPart(sheetpart_id);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Delete sheet part: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
 
@@ -36,7 +36,7 @@ public class SheetPartController {
             sheetPartService.changeSheetPartName(sheetpart_id, name);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Change part name: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
@@ -48,7 +48,7 @@ public class SheetPartController {
             sheetPartService.deleteTask(sheetpart_id, task);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Delete task: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
@@ -60,7 +60,7 @@ public class SheetPartController {
             sheetPartService.addTask(sheetpart_id, task);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Add task: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }

@@ -37,15 +37,13 @@ public class SheetPartService {
 
     }
 
-    public void changePartPosition(ChangePartPositionDTO dto, Long id) {
-        Sheet sheet = sheetRepository.findById(id).orElse(null);
-        if (sheet == null) {
-            return;
-        }
+    public void changePartPosition(ChangePartPositionDTO dto, Long id) throws Exception {
+        Sheet sheet = sheetRepository.findById(id)
+                .orElseThrow(()->new Exception("Sheet " + id + "not found"));
         List<SheetPart> list = sheetPartRepository.findAllBySheet(sheet);
         SheetPart part = sheetPartRepository.findByIndexAndSheet(dto.currentIndex, sheet);
         if (part == null) {
-            return;
+            throw new Exception("Part of index" + dto.currentIndex + "not found in sheet" + id);
         }
         list.forEach(
                 sheetPart -> {

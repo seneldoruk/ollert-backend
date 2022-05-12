@@ -43,7 +43,8 @@ public class SheetController {
         try {
             return sheetService.findById(sheet_id);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Get Sheet: " + e.getMessage());
+
             res.setStatus(400);
             return null;
         }
@@ -56,7 +57,8 @@ public class SheetController {
             sheetPartService.changeTaskPosition(dto, sheet_id);
             return HttpStatus.OK;
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println("Put Task: " + e.getMessage());
+
             return HttpStatus.BAD_REQUEST;
         }
 
@@ -65,16 +67,13 @@ public class SheetController {
     @PutMapping(value = "/{sheet_id}/part", consumes = "application/json")
     public @ResponseBody
     HttpStatus changePositionOfSheetPart(@PathVariable Long sheet_id, @RequestBody ChangePartPositionDTO dto) {
-        sheetPartService.changePartPosition(dto, sheet_id);
-        return HttpStatus.OK;
-//        try {
-//
-//        }catch (Exception e){
-//
-//            System.out.println(e.getStackTrace().toString());
-//            return HttpStatus.BAD_REQUEST;
-//        }
-
+        try {
+            sheetPartService.changePartPosition(dto, sheet_id);
+            return HttpStatus.OK;
+        }catch (Exception e){
+            System.err.println("Change Part Position: " + e.getMessage());
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 
     @PostMapping(value = "/{sheet_id}")
@@ -84,7 +83,7 @@ public class SheetController {
             sheetPartService.newSheetPart(sheet_id);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Create new sheet part: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
@@ -96,7 +95,7 @@ public class SheetController {
             sheetService.changeSheetName(sheet_id, name);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Change sheet name: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
@@ -108,7 +107,7 @@ public class SheetController {
             sheetService.deleteById(sheet_id);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Delete sheet: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
@@ -122,7 +121,7 @@ public class SheetController {
             sheetService.newSheet(name, username);
             return HttpStatus.OK;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("New sheet: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
 
@@ -134,6 +133,7 @@ public class SheetController {
         try {
             return sheetService.sheetAccess(sheet_id);
         } catch (Exception e) {
+            System.err.println("Get users accessing sheet: " + e.getMessage());
             res.setStatus(400);
             return null;
         }
@@ -146,6 +146,7 @@ public class SheetController {
             sheetService.sheetAccessAdd(sheet_id, username);
             return HttpStatus.OK;
         } catch (Exception e) {
+            System.err.println("Add user to sheet: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
@@ -157,6 +158,7 @@ public class SheetController {
             sheetService.sheetAccessRemove(sheet_id, username);
             return HttpStatus.OK;
         } catch (Exception e) {
+            System.err.println("Remove user from sheet: " + e.getMessage());
             return HttpStatus.BAD_REQUEST;
         }
     }
